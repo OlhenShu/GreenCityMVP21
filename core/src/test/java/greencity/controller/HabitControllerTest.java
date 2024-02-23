@@ -32,12 +32,13 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -126,9 +127,23 @@ public class HabitControllerTest {
 
         when(habitService.getAllByDifferentParameters(userVO, pageable, tags, Optional.of(isCustomHabit), Optional.of(Collections.singletonList(complexity)), "en")).thenReturn(pageableDto);
 
-        mockMvc.perform(get(STR."\{habitLink}/search").param("tags", tag).param("isCustomHabit", isCustomHabit.toString()).param("complexities", complexity.toString()).param("page", pageNumber.toString()).param("size", pageSize.toString())).andExpect(status().isOk()).andExpect(content().xml(xmlMapper.writeValueAsString(pageableDto)));
+        mockMvc.perform(get(STR."\{habitLink}/search")
+                .param("tags", tag)
+                .param("isCustomHabit", isCustomHabit.toString())
+                .param("complexities", complexity.toString())
+                .param("page", pageNumber.toString())
+                .param("size", pageSize.toString()))
+                .andExpect(status().isOk())
+                .andExpect(content().xml(xmlMapper.writeValueAsString(pageableDto)));
 
         verify(habitService).getAllByDifferentParameters(userVO, pageable, tags, Optional.of(isCustomHabit), Optional.of(Collections.singletonList(complexity)), "en");
+    }
+
+    @Test
+    void given_invalidParameters_when_getAllByDifferentParameters_then_throwBadRequestException() {
+        assertThrows(Exception.class, () -> mockMvc.perform(get(STR."\{habitLink}/search"))
+                .andExpect(status().isBadRequest())
+                .andExpect(result -> Assertions.assertEquals("You should enter at least one parameter", Objects.requireNonNull(result.getResolvedException()).getMessage())));
     }
 
     @Test
