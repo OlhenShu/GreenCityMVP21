@@ -1,0 +1,14 @@
+{
+  "id": 1,
+  "image": "example.png",
+  "defaultDuration": null,
+  "amountAcquiredUsers": null,
+  "habitTranslation": null,
+  "complexity": null,
+  "tags": [],
+  "shoppingListItems": [],
+  "customShoppingListItems": [],
+  "isCustomHabit": null,
+  "usersIdWhoCreatedCustomHabit": null,
+  "habitAssignStatus": null
+}

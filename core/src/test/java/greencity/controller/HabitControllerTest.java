@@ -2,6 +2,7 @@ package greencity.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import greencity.dto.habit.AddCustomHabitDtoRequest;
+import greencity.dto.habit.HabitDto;
 import greencity.dto.user.UserVO;
 import greencity.service.HabitService;
 import greencity.service.TagsService;
@@ -19,9 +20,15 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.eq;
@@ -30,6 +37,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -51,16 +59,26 @@ public class HabitControllerTest {
                 .build();
     }
 
+    //@TODO Ask about mockMvcTest and about returning HabitDto which dont have toString annotation
+
     @Test
-    void getHabitById() throws Exception {
+    void given_validHabitIdAndLocale_when_getHabitById_then_returnHabitDto() throws Exception {
+        HabitDto mockHabitDto = HabitDto.builder()
+                .id(1L)
+                .image("png")
+                .build();
+
+        when(habitService.getByIdAndLanguageCode(1L, "en")).thenReturn(mockHabitDto);
+
         mockMvc.perform(get(STR."\{habitLink}/{id}", 1))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(content().json(TestResources.getFileContent("controller/habitController/expected-habit-dto-list.json")));
 
         verify(habitService).getByIdAndLanguageCode(1L, "en");
     }
 
     @Test
-    void getAllTest() throws Exception {
+    void given_userVOAndLocaleAndPageable_when_getAll_then_returnPageableDto() throws Exception {
         int pageNumber = 1;
         int pageSize = 2;
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
@@ -73,7 +91,7 @@ public class HabitControllerTest {
     }
 
     @Test
-    void getShoppingListItemsTest() throws Exception {
+    void given_validHabitIdAndLocale_when_getShoppingListItems_then_returnShoppingListItems() throws Exception {
         mockMvc.perform(get(STR."\{habitLink}/{id}/shopping-list", 1))
                 .andExpect(status().isOk());
 
@@ -81,7 +99,7 @@ public class HabitControllerTest {
     }
 
     @Test
-    void getAllByTagsAndLanguageCodeTest() throws Exception {
+    void given_tagsAndLocaleAndPageable_when_getAllByTagsAndLanguageCode_then_returnPageableDto() throws Exception {
         int pageNumber = 5;
         int pageSize = 20;
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
@@ -94,7 +112,7 @@ public class HabitControllerTest {
     }
 
     @Test
-    void getAllByDifferentParametersTest() throws Exception {
+    void given_userVOAndLocaleAndTagsAndCustomHabitAndComplexitiesAndPageable_when_getAllByDifferentParameters_then_returnPageableDto() throws Exception {
         int pageNumber = 5;
         int pageSize = 20;
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
@@ -109,7 +127,7 @@ public class HabitControllerTest {
     }
 
     @Test
-    void findAllHabitsTagsTest() throws Exception {
+    void given_validLocale_when_findAllHabitsTags_then_returnListOfTags() throws Exception {
         mockMvc.perform(get(STR."\{habitLink}/tags?locale=en"))
                 .andExpect(status().isOk());
 
@@ -117,7 +135,7 @@ public class HabitControllerTest {
     }
 
     @Test
-    void addCustomHabitTest() throws Exception {
+    void given_validRequestAndImageAndPrincipal_when_addCustomHabit_then_returnAddCustomHabitDtoResponse() throws Exception {
         Principal principal = Mockito.mock(Principal.class);
         when(principal.getName()).thenReturn("Olivia.Johnson@gmail.com");
         String json = """
@@ -146,10 +164,17 @@ public class HabitControllerTest {
     }
 
     @Test
-    void getFriendsAssignedToHabitProfilePicturesTest() throws Exception {
+    void given_validHabitIdAndUserVO_when_getFriendsAssignedToHabitProfilePictures_then_returnListOfProfilePictures() throws Exception {
         mockMvc.perform(get(STR."\{habitLink}/{habitId}/friends/profile-pictures", 1))
                 .andExpect(status().isOk());
 
         verify(habitService).getFriendsAssignedToHabitProfilePictures(1L, null);
+    }
+
+    static class TestResources {
+        static String getFileContent(String path) throws URISyntaxException, IOException {
+            URL resource = TestResources.class.getClassLoader().getResource(path);
+            return new String(Files.readAllBytes(Path.of(Objects.requireNonNull(resource).toURI())));
+        }
     }
 }
