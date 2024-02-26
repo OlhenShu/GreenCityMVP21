@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +19,7 @@ import java.util.Locale;
 import org.springframework.http.MediaType;
 import greencity.dto.user.UserVO;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.validation.Validator;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.verify;
@@ -27,26 +29,30 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class HabitAssignControllerTest {
-    private MockMvc mockMvc;
     private static final String habitAssignLink = "/habit/assign";
+    private MockMvc mockMvc;
     @Mock
     private HabitAssignService habitAssignService;
+    @Mock
+    private Validator mockValidator;
     @InjectMocks
     private HabitAssignController habitAssignController;
-    Long id = 1L;
-    ObjectMapper objectMapper = new ObjectMapper();
-    LocalDate currentDate = LocalDate.now().atStartOfDay().toLocalDate();
-    LocalDate futureDate = currentDate.plusDays(3);
-    Locale locale = new Locale("en");
-    UserVO userVO = new UserVO();
-    HabitAssignDto habitAssignDto = new HabitAssignDto();
-    HabitAssignManagementDto habitAssignManagementDto = new HabitAssignManagementDto();
-    UserShoppingAndCustomShoppingListsDto userShoppingAndCustomShoppingListsDto = new UserShoppingAndCustomShoppingListsDto();
+    private Long id = 1L;
+    private ObjectMapper objectMapper = new ObjectMapper();
+    private LocalDate currentDate = LocalDate.now().atStartOfDay().toLocalDate();
+    private LocalDate futureDate = currentDate.plusDays(3);
+    private Locale locale = new Locale("en");
+    private UserVO userVO = new UserVO();
+    private HabitAssignDto habitAssignDto = new HabitAssignDto();
+    private HabitAssignManagementDto habitAssignManagementDto = new HabitAssignManagementDto();
+    private UserShoppingAndCustomShoppingListsDto userShoppingAndCustomShoppingListsDto = new UserShoppingAndCustomShoppingListsDto();
 
     @BeforeEach
     void setUp() {
         objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         this.mockMvc = MockMvcBuilders.standaloneSetup(habitAssignController)
+                .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+                .setValidator(mockValidator)
                 .build();
     }
 
