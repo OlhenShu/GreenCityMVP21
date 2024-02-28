@@ -2,6 +2,7 @@ package greencity;
 
 import greencity.constant.AppConstant;
 import greencity.dto.PageableAdvancedDto;
+import greencity.dto.category.CategoryDtoResponse;
 import greencity.dto.econews.*;
 import greencity.dto.econewscomment.*;
 import greencity.dto.habit.*;
@@ -193,6 +194,33 @@ public class ModelUtils {
         return new EcoNewsVO(1L, zonedDateTime, TestConst.SITE, null, getUserVO(),
             "title", "text", null, Collections.emptySet(), Collections.singletonList(getTagVO()),
             Collections.emptySet());
+    }
+
+    public static Category getCategoryOnlyWithName(){
+        return Category.builder()
+                .id(null)
+                .name("name")
+                .nameUa(null)
+                .parentCategory(null)
+                .categories(Collections.emptyList())
+                .build();
+    }
+
+    public static CategoryDtoResponse getCategoryDtoResponse(){
+        return CategoryDtoResponse.builder()
+                .id(1L)
+                .name("name")
+                .build();
+    }
+
+    public static Habit getHabit() {
+        return Habit.builder()
+                .id(null)
+                .image("image")
+                .complexity(2)
+                .defaultDuration(2)
+                .isCustomHabit(true)
+                .build();
     }
 
     public static HabitStatusCalendar getHabitStatusCalendar() {
