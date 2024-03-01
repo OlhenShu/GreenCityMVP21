@@ -104,6 +104,13 @@ public class ModelUtils {
             .build();
     }
 
+    public static User getUserShorten() {
+        return User.builder()
+                .id(1L)
+                .name(TestConst.NAME)
+                .build();
+    }
+
     public static UserVO getUserVO() {
         return UserVO.builder()
             .id(1L)
@@ -114,6 +121,14 @@ public class ModelUtils {
             .verifyEmail(new VerifyEmailVO())
             .dateOfRegistration(localDateTime)
             .build();
+    }
+
+    public static UserVO getUserVOShorten() {
+        return UserVO.builder()
+                .id(1L)
+                .name(TestConst.NAME)
+                .role(Role.ROLE_USER)
+                .build();
     }
 
     public static UserManagementVO getUserManagementVO() {
@@ -194,6 +209,10 @@ public class ModelUtils {
         return new EcoNewsVO(1L, zonedDateTime, TestConst.SITE, null, getUserVO(),
             "title", "text", null, Collections.emptySet(), Collections.singletonList(getTagVO()),
             Collections.emptySet());
+    }
+
+    public static EcoNewsVO getEcoNewsVOShorten() {
+        return EcoNewsVO.builder().id(1L).build();
     }
 
     public static Category getCategoryOnlyWithName(){
@@ -466,6 +485,19 @@ public class ModelUtils {
             .build();
     }
 
+    public static EcoNewsComment getEcoNewsCommentWiden() {
+        return EcoNewsComment.builder()
+                .id(1L)
+                .text("text")
+                .createdDate(LocalDateTime.now())
+                .modifiedDate(LocalDateTime.now())
+                .usersLiked(Collections.emptySet())
+                .comments(Collections.emptyList())
+                .user(getUser())
+                .ecoNews(getEcoNews())
+                .build();
+    }
+
     public static EcoNewsCommentAuthorDto getEcoNewsCommentAuthorDto() {
         return EcoNewsCommentAuthorDto.builder()
             .id(getUser().getId())
@@ -489,6 +521,27 @@ public class ModelUtils {
             .currentUserLiked(false)
             .status(CommentStatus.ORIGINAL)
             .build();
+    }
+
+    public static EcoNewsCommentDto getEcoNewsCommentDtoStatusEdited() {
+        return EcoNewsCommentDto.builder()
+                .id(1L)
+                .modifiedDate(LocalDateTime.now())
+                .author(getEcoNewsCommentAuthorDto())
+                .text("text")
+                .replies(0)
+                .likes(0)
+                .currentUserLiked(false)
+                .status(CommentStatus.EDITED)
+                .build();
+    }
+
+    public static EcoNewsCommentDto getEcoNewsCommentDtoStatusDeleted() {
+        return EcoNewsCommentDto.builder()
+                .id(1L)
+                .modifiedDate(LocalDateTime.now())
+                .status(CommentStatus.DELETED)
+                .build();
     }
 
     public static List<LanguageTranslationDTO> getLanguageTranslationsDTOs() {
@@ -527,9 +580,15 @@ public class ModelUtils {
     }
 
     public static EcoNewsCommentVO getEcoNewsCommentVO() {
-        return new EcoNewsCommentVO(1L, "text", LocalDateTime.now(), LocalDateTime.now(), new EcoNewsCommentVO(),
+        return new EcoNewsCommentVO(1L, "text", LocalDateTime.now(), LocalDateTime.now(), getEcoNewsCommentVOWithParentCommentNull(),
             new ArrayList<>(), getUserVO(), getEcoNewsVO(), false,
             false, new HashSet<>());
+    }
+
+    public static EcoNewsCommentVO getEcoNewsCommentVOWithParentCommentNull() {
+        return new EcoNewsCommentVO(1L, "text", LocalDateTime.now(), LocalDateTime.now(), null,
+                null, getUserVOShorten(), getEcoNewsVOShorten(), false,
+                false, Collections.emptySet());
     }
 
     public static EcoNewsDtoManagement getEcoNewsDtoManagement() {
@@ -636,6 +695,16 @@ public class ModelUtils {
             .build();
     }
 
+    public static List<CustomShoppingListItem> getCustomShoppingListItemList() {
+        List<CustomShoppingListItem> list = new ArrayList<>();
+        list.add(CustomShoppingListItem.builder()
+                .id(1L)
+                .text("text")
+                .status(ShoppingListItemStatus.ACTIVE)
+                .build());
+        return list;
+    }
+
     public static CustomShoppingListItem getCustomShoppingListItem() {
         return CustomShoppingListItem.builder()
             .id(1L)
@@ -695,5 +764,14 @@ public class ModelUtils {
             .text("item")
             .status(ShoppingListItemStatus.INPROGRESS)
             .build();
+    }
+    public static List<CustomShoppingListItemResponseDto> getCustomShoppingListItemResponseDtoWithStatusInProgressList() {
+        List<CustomShoppingListItemResponseDto> list = new ArrayList<>();
+        list.add(CustomShoppingListItemResponseDto.builder()
+                .id(2L)
+                .text("item")
+                .status(ShoppingListItemStatus.INPROGRESS)
+                .build());
+        return list;
     }
 }
