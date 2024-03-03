@@ -39,8 +39,10 @@ import static org.mockito.ArgumentMatchers.*;
 public class HabitControllerTest {
     private static final String habitControllerLink = "/habit";
     private static final Boolean isCustomHabit = true;
+    private final UserVO userVO = new UserVO();
     private final List<String> tags = Collections.singletonList("str");
     private final List<Integer> complexities = List.of(1);
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private final Long id = 1L;
     private MockMvc mockMvc;
     @Mock
@@ -49,10 +51,8 @@ public class HabitControllerTest {
     private TagsService tagsService;
     @InjectMocks
     private HabitController habitController;
-    private ObjectMapper objectMapper = new ObjectMapper();
     private Locale locale;
     private Pageable pageable;
-    private UserVO userVO = new UserVO();
 
     PageableDto<HabitDto> pageableDto = new PageableDto<>(Collections.emptyList(), 0, 0, 0);
 
