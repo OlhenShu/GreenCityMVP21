@@ -79,7 +79,7 @@ class HabitAssignMapperTest {
     }
 
     @Test
-    void convert_HabitAssignMapperTestWithEmptySource_ShouldMapWithNullFields() {
+    void convert_HabitAssignMapperTestWithEmptySource_ShouldReturnNullPointerException() {
         HabitAssignDto emptyHabitAssignDto = new HabitAssignDto();
 
         assertThrows(NullPointerException.class, () -> {

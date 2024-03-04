@@ -2,7 +2,7 @@ package greencity.mapping;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-        import greencity.dto.habit.HabitAssignDto;
+import greencity.dto.habit.HabitAssignDto;
 import greencity.entity.Habit;
 import greencity.entity.HabitAssign;
 import greencity.entity.User;
@@ -57,7 +57,7 @@ class HabitAssignDtoMapperTest {
     }
 
     @Test
-    void convert_HabitAssignDtoMapperTestWithEmptySource_ShouldMapWithNullFields() {
+    void convert_HabitAssignDtoMapperTestWithEmptySource_ShouldReturnNullPointerException() {
         HabitAssign emptyHabitAssign = new HabitAssign();
 
         assertThrows(NullPointerException.class, () -> {

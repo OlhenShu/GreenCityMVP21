@@ -56,7 +56,7 @@ class HabitAssignManagementDtoMapperTest {
     }
 
     @Test
-    void convert_HabitAssignManagementDtoMapperTestWithEmptySource_ShouldMapWithNullFields() {
+    void convert_HabitAssignManagementDtoMapperTestWithEmptySource_ShouldReturnNullPointerException() {
         HabitAssign emptyHabitAssign = new HabitAssign();
 
         assertThrows(NullPointerException.class, () -> {
