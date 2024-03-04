@@ -1,32 +1,41 @@
 package greencity.mapping;
 
 import greencity.ModelUtils;
+import greencity.constant.AppConstant;
 import greencity.dto.econews.EcoNewsDto;
-import greencity.dto.shoppinglistitem.CustomShoppingListItemResponseDto;
-import greencity.entity.CustomShoppingListItem;
-import greencity.entity.EcoNews;
-import greencity.entity.Tag;
-import greencity.entity.User;
+import greencity.entity.*;
+import greencity.entity.localization.TagTranslation;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-//@TODO make tags not empty
+
 @ExtendWith(MockitoExtension.class)
 public class EcoNewsDtoMapperTest {
     @InjectMocks
     EcoNewsDtoMapper mapper;
+
     @Test
     void convert() {
         EcoNewsDto expected = ModelUtils.getEcoNewsDto();
-        expected.setTags(Collections.emptyList());
-        expected.setTagsUa(Collections.emptyList());
+        Tag tag1 = Tag.builder()
+                .tagTranslations(List.of(TagTranslation.builder()
+                        .language(Language.builder().code(AppConstant.DEFAULT_LANGUAGE_CODE).build())
+                        .name("tag")
+                        .build()))
+                .build();
+        Tag tag2 = Tag.builder()
+                .tagTranslations(List.of(TagTranslation.builder()
+                        .language(Language.builder().code("ua").build())
+                        .name("тег")
+                        .build()))
+                .build();
         EcoNews ecoNews = EcoNews.builder()
                 .id(expected.getId())
                 .author(ModelUtils.getUserShorten())
@@ -35,7 +44,7 @@ public class EcoNewsDtoMapperTest {
                 .imagePath(expected.getImagePath())
                 .usersLikedNews(Set.of(new User()))
                 .shortInfo(expected.getShortInfo())
-                .tags(Collections.emptyList())
+                .tags(List.of(tag1, tag2))
                 .usersDislikedNews(Collections.emptySet())
                 .title(expected.getTitle())
                 .ecoNewsComments(Collections.emptyList())
