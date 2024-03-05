@@ -12,8 +12,7 @@ import greencity.dto.language.LanguageTranslationDTO;
 import greencity.dto.language.LanguageVO;
 import greencity.dto.ownsecurity.OwnSecurityVO;
 import greencity.dto.search.SearchNewsDto;
-import greencity.dto.shoppinglistitem.CustomShoppingListItemResponseDto;
-import greencity.dto.shoppinglistitem.CustomShoppingListItemVO;
+import greencity.dto.shoppinglistitem.*;
 import greencity.dto.tag.*;
 import greencity.dto.user.*;
 import greencity.dto.verifyemail.VerifyEmailVO;
@@ -53,7 +52,9 @@ public class ModelUtils {
         return new Tag(1L, TagType.HABIT, getHabitTagTranslations(), Collections.emptyList(),
             Collections.emptySet());
     }
-
+    public static NewTagDto getNewTagDto() {
+        return new NewTagDto(1L, "News", "Новини");
+    }
     public static List<TagTranslation> getTagTranslations() {
         return Arrays.asList(
             TagTranslation.builder().id(1L).name("Новини").language(Language.builder().id(2L).code("ua").build())
@@ -247,6 +248,23 @@ public class ModelUtils {
             .enrollDate(LocalDate.now()).id(1L).build();
     }
 
+    public static HabitTranslation getHabitTranslationWithoutLanguage(){
+        return HabitTranslation.builder()
+                .description("text")
+                .name("name")
+                .habitItem("item")
+                .build();
+    }
+
+    public static HabitTranslation getHabitTranslation(){
+        return HabitTranslation.builder()
+                .language(getLanguage())
+                .description("text")
+                .name("name")
+                .habitItem("item")
+                .build();
+    }
+
     public static HabitAssign getHabitAssign() {
         return HabitAssign.builder()
             .id(1L)
@@ -278,6 +296,21 @@ public class ModelUtils {
         return HabitStatistic.builder()
             .id(1L).habitRate(HabitRate.GOOD).createDate(ZonedDateTime.now())
             .amountOfItems(10).build();
+    }
+
+    public static ShoppingListItemResponseDto getShoppingListItemResponseDto(){
+        return ShoppingListItemResponseDto.builder()
+                .id(1L)
+                .translations(Collections.singletonList(getShoppingListItemTranslationDTO()))
+                .build();
+    }
+
+    public static ShoppingListItemTranslationDTO getShoppingListItemTranslationDTO(){
+        return ShoppingListItemTranslationDTO.builder()
+                .id(1L)
+                .language(getLanguageVO())
+                .content("content")
+                .build();
     }
 
     public static UserShoppingListItem getCustomUserShoppingListItem() {
@@ -346,6 +379,14 @@ public class ModelUtils {
             .build();
     }
 
+    public static List<ShoppingListItemTranslation> getShoppingListItemTranslationsShorten() {
+        return List.of(ShoppingListItemTranslation.builder()
+                .id(1L)
+                .content("content")
+                .build());
+    }
+
+
     public static List<ShoppingListItemTranslation> getShoppingListItemTranslations() {
         return Arrays.asList(
             ShoppingListItemTranslation.builder()
@@ -364,6 +405,14 @@ public class ModelUtils {
                 .shoppingListItem(
                     new ShoppingListItem(4L, Collections.emptyList(), Collections.emptySet(), Collections.emptyList()))
                 .build());
+    }
+
+    public static ShoppingListItemDto getShoppingListItemDto(){
+        return ShoppingListItemDto.builder()
+                .id(1L)
+                .status("ACTIVE")
+                .text("text")
+                .build();
     }
 
     public static HabitFactTranslation getFactTranslation() {
