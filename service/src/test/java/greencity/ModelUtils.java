@@ -2,6 +2,7 @@ package greencity;
 
 import greencity.constant.AppConstant;
 import greencity.dto.PageableAdvancedDto;
+import greencity.dto.category.CategoryDtoResponse;
 import greencity.dto.econews.*;
 import greencity.dto.econewscomment.*;
 import greencity.dto.habit.*;
@@ -11,8 +12,7 @@ import greencity.dto.language.LanguageTranslationDTO;
 import greencity.dto.language.LanguageVO;
 import greencity.dto.ownsecurity.OwnSecurityVO;
 import greencity.dto.search.SearchNewsDto;
-import greencity.dto.shoppinglistitem.CustomShoppingListItemResponseDto;
-import greencity.dto.shoppinglistitem.CustomShoppingListItemVO;
+import greencity.dto.shoppinglistitem.*;
 import greencity.dto.tag.*;
 import greencity.dto.user.*;
 import greencity.dto.verifyemail.VerifyEmailVO;
@@ -52,7 +52,9 @@ public class ModelUtils {
         return new Tag(1L, TagType.HABIT, getHabitTagTranslations(), Collections.emptyList(),
             Collections.emptySet());
     }
-
+    public static NewTagDto getNewTagDto() {
+        return new NewTagDto(1L, "News", "Новини");
+    }
     public static List<TagTranslation> getTagTranslations() {
         return Arrays.asList(
             TagTranslation.builder().id(1L).name("Новини").language(Language.builder().id(2L).code("ua").build())
@@ -103,6 +105,13 @@ public class ModelUtils {
             .build();
     }
 
+    public static User getUserShorten() {
+        return User.builder()
+                .id(1L)
+                .name(TestConst.NAME)
+                .build();
+    }
+
     public static UserVO getUserVO() {
         return UserVO.builder()
             .id(1L)
@@ -113,6 +122,14 @@ public class ModelUtils {
             .verifyEmail(new VerifyEmailVO())
             .dateOfRegistration(localDateTime)
             .build();
+    }
+
+    public static UserVO getUserVOShorten() {
+        return UserVO.builder()
+                .id(1L)
+                .name(TestConst.NAME)
+                .role(Role.ROLE_USER)
+                .build();
     }
 
     public static UserManagementVO getUserManagementVO() {
@@ -195,9 +212,57 @@ public class ModelUtils {
             Collections.emptySet());
     }
 
+    public static EcoNewsVO getEcoNewsVOShorten() {
+        return EcoNewsVO.builder().id(1L).build();
+    }
+
+    public static Category getCategoryOnlyWithName(){
+        return Category.builder()
+                .id(null)
+                .name("name")
+                .nameUa(null)
+                .parentCategory(null)
+                .categories(Collections.emptyList())
+                .build();
+    }
+
+    public static CategoryDtoResponse getCategoryDtoResponse(){
+        return CategoryDtoResponse.builder()
+                .id(1L)
+                .name("name")
+                .build();
+    }
+
+    public static Habit getHabit() {
+        return Habit.builder()
+                .id(null)
+                .image("image")
+                .complexity(2)
+                .defaultDuration(2)
+                .isCustomHabit(true)
+                .build();
+    }
+
     public static HabitStatusCalendar getHabitStatusCalendar() {
         return HabitStatusCalendar.builder()
             .enrollDate(LocalDate.now()).id(1L).build();
+    }
+
+    public static HabitTranslation getHabitTranslationWithoutLanguage(){
+        return HabitTranslation.builder()
+                .description("text")
+                .name("name")
+                .habitItem("item")
+                .build();
+    }
+
+    public static HabitTranslation getHabitTranslation(){
+        return HabitTranslation.builder()
+                .language(getLanguage())
+                .description("text")
+                .name("name")
+                .habitItem("item")
+                .build();
     }
 
     public static HabitAssign getHabitAssign() {
@@ -231,6 +296,21 @@ public class ModelUtils {
         return HabitStatistic.builder()
             .id(1L).habitRate(HabitRate.GOOD).createDate(ZonedDateTime.now())
             .amountOfItems(10).build();
+    }
+
+    public static ShoppingListItemResponseDto getShoppingListItemResponseDto(){
+        return ShoppingListItemResponseDto.builder()
+                .id(1L)
+                .translations(Collections.singletonList(getShoppingListItemTranslationDTO()))
+                .build();
+    }
+
+    public static ShoppingListItemTranslationDTO getShoppingListItemTranslationDTO(){
+        return ShoppingListItemTranslationDTO.builder()
+                .id(1L)
+                .language(getLanguageVO())
+                .content("content")
+                .build();
     }
 
     public static UserShoppingListItem getCustomUserShoppingListItem() {
@@ -299,6 +379,14 @@ public class ModelUtils {
             .build();
     }
 
+    public static List<ShoppingListItemTranslation> getShoppingListItemTranslationsShorten() {
+        return List.of(ShoppingListItemTranslation.builder()
+                .id(1L)
+                .content("content")
+                .build());
+    }
+
+
     public static List<ShoppingListItemTranslation> getShoppingListItemTranslations() {
         return Arrays.asList(
             ShoppingListItemTranslation.builder()
@@ -317,6 +405,14 @@ public class ModelUtils {
                 .shoppingListItem(
                     new ShoppingListItem(4L, Collections.emptyList(), Collections.emptySet(), Collections.emptyList()))
                 .build());
+    }
+
+    public static ShoppingListItemDto getShoppingListItemDto(){
+        return ShoppingListItemDto.builder()
+                .id(1L)
+                .status("ACTIVE")
+                .text("text")
+                .build();
     }
 
     public static HabitFactTranslation getFactTranslation() {
@@ -438,6 +534,19 @@ public class ModelUtils {
             .build();
     }
 
+    public static EcoNewsComment getEcoNewsCommentWiden() {
+        return EcoNewsComment.builder()
+                .id(1L)
+                .text("text")
+                .createdDate(LocalDateTime.now())
+                .modifiedDate(LocalDateTime.now())
+                .usersLiked(Collections.emptySet())
+                .comments(Collections.emptyList())
+                .user(getUser())
+                .ecoNews(getEcoNews())
+                .build();
+    }
+
     public static EcoNewsCommentAuthorDto getEcoNewsCommentAuthorDto() {
         return EcoNewsCommentAuthorDto.builder()
             .id(getUser().getId())
@@ -461,6 +570,27 @@ public class ModelUtils {
             .currentUserLiked(false)
             .status(CommentStatus.ORIGINAL)
             .build();
+    }
+
+    public static EcoNewsCommentDto getEcoNewsCommentDtoStatusEdited() {
+        return EcoNewsCommentDto.builder()
+                .id(1L)
+                .modifiedDate(LocalDateTime.now())
+                .author(getEcoNewsCommentAuthorDto())
+                .text("text")
+                .replies(0)
+                .likes(0)
+                .currentUserLiked(false)
+                .status(CommentStatus.EDITED)
+                .build();
+    }
+
+    public static EcoNewsCommentDto getEcoNewsCommentDtoStatusDeleted() {
+        return EcoNewsCommentDto.builder()
+                .id(1L)
+                .modifiedDate(LocalDateTime.now())
+                .status(CommentStatus.DELETED)
+                .build();
     }
 
     public static List<LanguageTranslationDTO> getLanguageTranslationsDTOs() {
@@ -499,9 +629,15 @@ public class ModelUtils {
     }
 
     public static EcoNewsCommentVO getEcoNewsCommentVO() {
-        return new EcoNewsCommentVO(1L, "text", LocalDateTime.now(), LocalDateTime.now(), new EcoNewsCommentVO(),
+        return new EcoNewsCommentVO(1L, "text", LocalDateTime.now(), LocalDateTime.now(), getEcoNewsCommentVOWithParentCommentNull(),
             new ArrayList<>(), getUserVO(), getEcoNewsVO(), false,
             false, new HashSet<>());
+    }
+
+    public static EcoNewsCommentVO getEcoNewsCommentVOWithParentCommentNull() {
+        return new EcoNewsCommentVO(1L, "text", LocalDateTime.now(), LocalDateTime.now(), null,
+                null, getUserVOShorten(), getEcoNewsVOShorten(), false,
+                false, Collections.emptySet());
     }
 
     public static EcoNewsDtoManagement getEcoNewsDtoManagement() {
@@ -608,6 +744,16 @@ public class ModelUtils {
             .build();
     }
 
+    public static List<CustomShoppingListItem> getCustomShoppingListItemList() {
+        List<CustomShoppingListItem> list = new ArrayList<>();
+        list.add(CustomShoppingListItem.builder()
+                .id(1L)
+                .text("text")
+                .status(ShoppingListItemStatus.ACTIVE)
+                .build());
+        return list;
+    }
+
     public static CustomShoppingListItem getCustomShoppingListItem() {
         return CustomShoppingListItem.builder()
             .id(1L)
@@ -667,5 +813,14 @@ public class ModelUtils {
             .text("item")
             .status(ShoppingListItemStatus.INPROGRESS)
             .build();
+    }
+    public static List<CustomShoppingListItemResponseDto> getCustomShoppingListItemResponseDtoWithStatusInProgressList() {
+        List<CustomShoppingListItemResponseDto> list = new ArrayList<>();
+        list.add(CustomShoppingListItemResponseDto.builder()
+                .id(2L)
+                .text("item")
+                .status(ShoppingListItemStatus.INPROGRESS)
+                .build());
+        return list;
     }
 }
